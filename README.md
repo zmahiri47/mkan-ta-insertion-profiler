@@ -20,16 +20,6 @@ This work supports:
 | `ta_profiler.py` | CLI tool that classifies every TA transposon insertion site as **intragenic** (inside a gene) or **intergenic** (between two genes), against a GFF gene annotation. |
 | `README.md` | This file. |
 
-`ta_profiler.py` is a cleaned-up, runnable rewrite of the project's original
-`whole-script.py`, which was a raw export of an interactive Jupyter session
-used to develop the analysis. That original script hard-coded local file
-names, split GFF attributes on a fixed number of `;` characters, referenced
-variables that only existed in the author's live notebook kernel (e.g.
-hand-edited intermediate CSVs), and could not be run end-to-end as a
-standalone script. This rewrite reproduces the same underlying analysis —
-annotate every TA site as intragenic/intergenic and report the relevant
-gene context — as a single, documented, parallelized command-line tool.
-
 ## How it works
 
 For every TA transposon insertion coordinate, the script asks:
