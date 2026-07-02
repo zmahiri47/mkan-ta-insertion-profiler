@@ -7,10 +7,6 @@ TA (transposon) insertion site profiler for *Mycobacterium kansasii* Tn-seq data
 
 WHAT THIS SCRIPT DOES
 ----------------------
-This is a cleaned-up, runnable rewrite of the original exploratory notebook
-export ``whole-script.py`` from the mkan-ta-insertion-profiler repository
-(Budell et al., MicrobiologyOpen 9(4):e988, 2020 -- transposon mutagenesis
-in *M. kansasii*).
 
 Given:
   1. A GFF-style gene annotation table (TSV) with the standard 9 GFF columns
@@ -25,22 +21,6 @@ Given:
     (upstream/downstream) genes and the distances to each are reported.
 
 and writes a single tidy CSV describing every insertion.
-
-WHY THIS DIFFERS FROM THE ORIGINAL SCRIPT
-------------------------------------------
-The original ``whole-script.py`` was a raw export of an interactive Jupyter
-session. It:
-  - re-read partially hand-edited intermediate CSV files between steps,
-  - referenced undefined variables (``Not_Intra_pos``, ``Inter_TAs_II``,
-    ``result``, ``MKAN_Chr_Table`` ...) that only ever existed in the
-    author's live notebook kernel,
-  - hard-coded a fixed number of ``;``-separated attribute fields, which
-    silently breaks on GFF attribute strings with a different field count,
-  - had no CLI, no parallelism, and could not be run end-to-end.
-
-This rewrite reproduces the *intent* of that pipeline (annotate every TA
-insertion site as intragenic/intergenic against a GFF) as a single,
-self-contained, parallelized, documented CLI tool.
 
 USAGE
 -----
@@ -92,11 +72,6 @@ def parse_gff_attributes(attribute_str: str) -> dict:
         ID=gene-MKAN_RS27780;Dbxref=GeneID:29696832;Name=MKAN_RS27780;
         gbkey=Gene;gene_biotype=protein_coding;locus_tag=MKAN_RS27780;
         old_locus_tag=MKAN_29095
-
-    Unlike the original script (which split on a *fixed* number of
-    semicolons and therefore broke on rows with more/fewer fields), this
-    parses every key=value pair independently, so it is robust to ragged
-    attribute strings.
     """
     fields: dict = {}
     if not isinstance(attribute_str, str):
@@ -155,8 +130,7 @@ def load_ta_hits(hits_path: Path, column: Optional[str]) -> list[int]:
 
     ``column`` may name a header to select from (if the file has a header
     row); otherwise the first column of the file is used and any row that
-    doesn't parse as an integer is skipped (this tolerates an optional
-    header row, mirroring how the original data files were formatted).
+    doesn't parse as an integer is skipped.
     """
     LOG.info("Loading TA insertion sites from %s", hits_path)
     if column:
